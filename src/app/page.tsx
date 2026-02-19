@@ -380,17 +380,17 @@ END:VEVENT`;
               <h3 className={`text-sm font-medium mb-3 sm:mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Style Options</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2">Foreground</label>
+                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Foreground</label>
                   <div className="flex items-center gap-2">
-                    <input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border-2 border-gray-200" />
-                    <input type="text" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-900 text-sm font-mono uppercase" />
+                    <input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border-2 border-gray-200 dark:border-gray-600" />
+                    <input type="text" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 text-sm font-mono uppercase" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2">Background</label>
+                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Background</label>
                   <div className="flex items-center gap-2">
-                    <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border-2 border-gray-200" />
-                    <input type="text" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-900 text-sm font-mono uppercase" />
+                    <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border-2 border-gray-200 dark:border-gray-600" />
+                    <input type="text" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 text-sm font-mono uppercase" />
                   </div>
                 </div>
               </div>
@@ -408,13 +408,13 @@ END:VEVENT`;
                 <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Logo (optional)</label>
                 <input type="file" accept="image/*" onChange={handleLogoUpload} className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white text-sm file:mr-3 file:py-1.5 file:px-3 sm:file:py-2 sm:file:px-4 file:rounded-lg file:border-0 file:text-xs sm:file:text-sm file:font-medium file:bg-indigo-50 dark:file:bg-indigo-900 file:text-indigo-700 dark:text-indigo-300 hover:file:bg-indigo-100 dark:hover:file:bg-indigo-800 transition" />
                 {logo && (
-                  <div className="mt-3 flex items-center gap-4">
+                  <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                     <div className="flex items-center gap-2">
-                      <label className="text-sm text-gray-600">Size:</label>
-                      <input type="range" min="10" max="40" value={logoSize} onChange={(e) => setLogoSize(Number(e.target.value))} className="w-24 accent-indigo-600" />
-                      <span className="text-sm text-gray-600">{logoSize}%</span>
+                      <label className="text-sm text-gray-600 dark:text-gray-400">Size:</label>
+                      <input type="range" min="10" max="40" value={logoSize} onChange={(e) => setLogoSize(Number(e.target.value))} className="w-20 sm:w-24 accent-indigo-600" />
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{logoSize}%</span>
                     </div>
-                    <button onClick={removeLogo} className="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                    <button onClick={removeLogo} className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-sm font-medium">Remove</button>
                   </div>
                 )}
               </div>
