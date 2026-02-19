@@ -359,12 +359,12 @@ END:VEVENT`;
           <p className={`text-sm sm:text-base ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Create beautiful, customizable QR codes for any purpose</p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-full overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {/* Input Section */}
-          <div className={`rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 border max-w-full overflow-hidden bg-white dark:bg-gray-800 ${darkMode ? 'border-gray-700' : 'border-gray-100'}`}>
-            <div className="mb-5 sm:mb-6">
+          <div className={`rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+            <div className="mb-5 sm:mb-6 overflow-x-auto pb-2 -mb-2">
               <label className={`block text-sm font-medium mb-2 sm:mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Select QR Type</label>
-              <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-2 -mb-2 scrollbar-hide">
+              <div className="flex gap-1.5 sm:gap-2 px-1 w-full">
                 {qrTypes.map((type) => (
                   <button key={type.id} onClick={() => setQrType(type.id)} className={`py-2 px-2 sm:p-3 rounded-lg sm:rounded-xl transition-all duration-200 flex flex-col items-center gap-0.5 sm:gap-1 flex-1 sm:flex-none min-w-[60px] sm:min-w-auto ${qrType === type.id ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg" : `${darkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}`}>
                     <span className="text-sm sm:text-lg">{type.icon}</span>
@@ -422,7 +422,7 @@ END:VEVENT`;
           </div>
 
           {/* Preview Section */}
-          <div className={`rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 border flex flex-col max-w-full overflow-hidden bg-white dark:bg-gray-800 ${darkMode ? 'border-gray-700' : 'border-gray-100'}`}>
+          <div className={`rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 border flex flex-col ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
             <h2 className={`text-lg sm:text-xl font-semibold mb-4 sm:mb-6 flex items-center gap-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
               <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
