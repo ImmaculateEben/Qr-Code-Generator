@@ -467,7 +467,7 @@ END:VEVENT`;
         <footer className={`mt-8 sm:mt-10 text-center text-xs sm:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
           <p>Generated QR codes work with any QR scanner</p>
           <p className="mt-1 sm:mt-2">
-            Developed by <a href="https://www.immaculatedesigns.com.ng" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium">Immaculate Designs</a>
+            Built with <span className="text-red-500">❤️</span> by <a href="https://www.immaculatedesigns.com.ng" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium">Ebenezer</a>
           </p>
         </footer>
       </div>

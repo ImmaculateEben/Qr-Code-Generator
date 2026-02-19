@@ -52,7 +52,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [https://qr-code-generator-sigma-beige-66.vercel.app/](https://qr-code-generator-sigma-beige-66.vercel.app/) in your browser.
 
 ### Build for Production
 
@@ -113,7 +113,7 @@ This project is licensed under the MIT License.
 
 ## Author
 
-**Developed by [Immaculate Designs](https://www.immaculatedesigns.com.ng)**
+**Built with ❤️ by [Ebenezer](https://www.immaculatedesigns.com.ng)**
 
 ---
 
