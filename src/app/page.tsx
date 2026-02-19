@@ -364,11 +364,11 @@ END:VEVENT`;
           <div className={`rounded-3xl shadow-2xl p-6 border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
             <div className="mb-6 overflow-x-auto pb-2 -mb-2">
               <label className={`block text-sm font-medium mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Select QR Type</label>
-              <div className="flex gap-2 min-w-max px-1">
+              <div className="flex gap-2 px-1 w-full max-w-[100vw]">
                 {qrTypes.map((type) => (
-                  <button key={type.id} onClick={() => setQrType(type.id)} className={`p-2 sm:p-3 rounded-xl transition-all duration-200 flex flex-col items-center gap-1 min-w-[28vw] sm:min-w-auto ${qrType === type.id ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg" : `${darkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}`}>
-                    <span className="text-lg">{type.icon}</span>
-                    <span className="text-xs font-medium truncate w-full text-center">{type.label}</span>
+                  <button key={type.id} onClick={() => setQrType(type.id)} className={`p-1.5 sm:p-3 rounded-lg sm:rounded-xl transition-all duration-200 flex flex-col items-center gap-0.5 sm:gap-1 min-w-[24vw] sm:min-w-auto ${qrType === type.id ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg" : `${darkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}`}>
+                    <span className="text-base sm:text-lg">{type.icon}</span>
+                    <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center">{type.label}</span>
                   </button>
                 ))}
               </div>
