@@ -289,9 +289,10 @@ END:VEVENT`;
         if (error) throw error;
         setSaveMessage("QR Code saved to your library!");
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error saving QR code:", error);
-      setSaveMessage("Failed to save QR code. Please try again.");
+      const err = error as { message?: string; details?: string };
+      setSaveMessage(err?.message || err?.details || "Failed to save QR code. Please try again.");
     } finally {
       setSaving(false);
     }
