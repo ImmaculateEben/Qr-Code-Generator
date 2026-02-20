@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -78,6 +78,48 @@ export default function Home() {
   const [smsBody, setSmsBody] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [editingQRId, setEditingQRId] = useState<string | null>(null);
+
+  // Load QR data from localStorage for editing
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("edit") === "true") {
+      const editData = localStorage.getItem("editQR");
+      if (editData) {
+        try {
+          const qr = JSON.parse(editData);
+          setQrType(qr.qr_type);
+          setFgColor(qr.fg_color || "#1e293b");
+          setBgColor(qr.bg_color || "#ffffff");
+          setErrorCorrectionLevel(qr.error_correction || "M");
+          setLogo(qr.logo_url);
+          setLogoSize(qr.logo_size || 20);
+          setEditingQRId(qr.id);
+
+          // Load type-specific data
+          if (qr.content) {
+            if (qr.content.value) setValue(qr.content.value);
+            if (qr.content.wifiData) setWifiData(qr.content.wifiData);
+            if (qr.content.phoneNumber) setPhoneNumber(qr.content.phoneNumber);
+            if (qr.content.emailAddress) setEmailAddress(qr.content.emailAddress);
+            if (qr.content.whatsappNumber) setWhatsappNumber(qr.content.whatsappNumber);
+            if (qr.content.vcardData) setVcardData(qr.content.vcardData);
+            if (qr.content.eventData) setEventData(qr.content.eventData);
+            if (qr.content.smsNumber) setSmsNumber(qr.content.smsNumber);
+            if (qr.content.smsBody) setSmsBody(qr.content.smsBody);
+            if (qr.content.locationData) setLocationData(qr.content.locationData);
+          }
+
+          // Clear localStorage after loading
+          localStorage.removeItem("editQR");
+          // Remove query param
+          window.history.replaceState({}, "", "/");
+        } catch (e) {
+          console.error("Error parsing edit data:", e);
+        }
+      }
+    }
+  }, []);
   const [saveMessage, setSaveMessage] = useState("");
 
   const generateQRValue = useCallback(() => {
@@ -190,37 +232,70 @@ END:VEVENT`;
     setSaveMessage("");
 
     try {
-      const { error } = await supabase.from("qr_codes").insert({
-        user_id: user.id,
-        qr_type: qrType,
-        content: {
-          value,
-          wifiData,
-          phoneNumber,
-          emailAddress,
-          whatsappNumber,
-          vcardData,
-          eventData,
-          smsNumber,
-          smsBody,
-          locationData,
-        },
-        fg_color: fgColor,
-        bg_color: bgColor,
-        error_correction: errorCorrectionLevel,
-        logo_url: logo,
-        logo_size: logoSize,
-      });
+      if (editingQRId) {
+        // Update existing QR code
+        const { error } = await supabase
+          .from("qr_codes")
+          .update({
+            qr_type: qrType,
+            content: {
+              value,
+              wifiData,
+              phoneNumber,
+              emailAddress,
+              whatsappNumber,
+              vcardData,
+              eventData,
+              smsNumber,
+              smsBody,
+              locationData,
+            },
+            fg_color: fgColor,
+            bg_color: bgColor,
+            error_correction: errorCorrectionLevel,
+            logo_url: logo,
+            logo_size: logoSize,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", editingQRId);
 
-      if (error) throw error;
-      setSaveMessage("QR Code saved to your library!");
+        if (error) throw error;
+        setSaveMessage("QR Code updated successfully!");
+        setEditingQRId(null);
+      } else {
+        // Insert new QR code
+        const { error } = await supabase.from("qr_codes").insert({
+          user_id: user.id,
+          qr_type: qrType,
+          content: {
+            value,
+            wifiData,
+            phoneNumber,
+            emailAddress,
+            whatsappNumber,
+            vcardData,
+            eventData,
+            smsNumber,
+            smsBody,
+            locationData,
+          },
+          fg_color: fgColor,
+          bg_color: bgColor,
+          error_correction: errorCorrectionLevel,
+          logo_url: logo,
+          logo_size: logoSize,
+        });
+
+        if (error) throw error;
+        setSaveMessage("QR Code saved to your library!");
+      }
     } catch (error) {
       console.error("Error saving QR code:", error);
       setSaveMessage("Failed to save QR code. Please try again.");
     } finally {
       setSaving(false);
     }
-  }, [user, qrValue, qrType, value, wifiData, phoneNumber, emailAddress, whatsappNumber, vcardData, eventData, smsNumber, smsBody, locationData, fgColor, bgColor, errorCorrectionLevel, logo, logoSize]);
+  }, [user, qrValue, qrType, value, wifiData, phoneNumber, emailAddress, whatsappNumber, vcardData, eventData, smsNumber, smsBody, locationData, fgColor, bgColor, errorCorrectionLevel, logo, logoSize, editingQRId]);
 
   const renderTypeFields = () => {
     switch (qrType) {
@@ -519,7 +594,7 @@ END:VEVENT`;
             {user && (
               <button onClick={saveQRCode} disabled={!qrValue || saving} className="mt-3 w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:shadow-none text-sm sm:text-base">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
-                {saving ? 'Saving...' : 'Save to Library'}
+                {saving ? 'Saving...' : editingQRId ? 'Update' : 'Save to Library'}
               </button>
             )}
           </div>
