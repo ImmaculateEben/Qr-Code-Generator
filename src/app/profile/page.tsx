@@ -241,7 +241,7 @@ export default function Profile() {
           <button
             onClick={async () => {
               if (!confirm("Are you sure you want to delete your account? This cannot be undone.")) return;
-              if (!confirm("Really delete your account? All QR codes will be lost forever!")) return;
+              if (!confirm("This will permanently delete all your QR codes. Are you absolutely sure?")) return;
               
               setDeleting(true);
               try {

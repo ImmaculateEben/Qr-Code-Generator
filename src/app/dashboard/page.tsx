@@ -389,7 +389,7 @@ END:VEVENT`;
               </button>
 
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                {selectedQR.title || "Untitled QR"}
+                QR Code Details
               </h2>
 
               <div
