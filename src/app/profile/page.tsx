@@ -19,6 +19,7 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -226,6 +227,43 @@ export default function Profile() {
             <div className="font-medium text-gray-900 dark:text-white">Create New</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">Generate QR</div>
           </Link>
+        </div>
+
+        {/* Delete Account */}
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-red-200 dark:border-red-800 p-6">
+          <h2 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">
+            Delete Account
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Once you delete your account, there is no going back. Please be certain.
+            All your QR codes will be permanently deleted.
+          </p>
+          <button
+            onClick={async () => {
+              if (!confirm("Are you sure you want to delete your account? This cannot be undone.")) return;
+              if (!confirm("Really delete your account? All QR codes will be lost forever!")) return;
+              
+              setDeleting(true);
+              try {
+                // Delete all QR codes first
+                await supabase.from("qr_codes").delete().eq("user_id", user.id);
+                // Delete profile
+                await supabase.from("profiles").delete().eq("id", user.id);
+                // Sign out
+                await supabase.auth.signOut();
+                // Redirect to home
+                window.location.href = "/";
+              } catch (error) {
+                console.error("Error deleting account:", error);
+                alert("Failed to delete account. Please try again.");
+                setDeleting(false);
+              }
+            }}
+            disabled={deleting}
+            className="w-full py-3 px-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all disabled:opacity-50"
+          >
+            {deleting ? "Deleting Account..." : "Delete My Account"}
+          </button>
         </div>
       </div>
     </div>
