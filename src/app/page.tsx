@@ -2,6 +2,10 @@
 
 import { useState, useRef, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
+import AuthModal from "@/components/AuthModal";
+import UserMenu from "@/components/UserMenu";
 
 type QRType = "url" | "text" | "wifi" | "phone" | "email" | "whatsapp" | "vcard" | "event" | "sms" | "location";
 type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
@@ -52,6 +56,7 @@ const inputClass = "w-full px-3 sm:px-4 py-3 bg-white dark:bg-gray-700 border bo
 const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2";
 
 export default function Home() {
+  const { user } = useAuth();
   const [qrType, setQrType] = useState<QRType>("url");
   const [value, setValue] = useState("");
   const [fgColor, setFgColor] = useState("#1e293b");
@@ -71,6 +76,9 @@ export default function Home() {
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [smsNumber, setSmsNumber] = useState("");
   const [smsBody, setSmsBody] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
 
   const generateQRValue = useCallback(() => {
     switch (qrType) {
@@ -170,6 +178,49 @@ END:VEVENT`;
     document.body.removeChild(downloadLink);
     URL.revokeObjectURL(url);
   }, []);
+
+  const saveQRCode = useCallback(async () => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+    if (!qrValue) return;
+
+    setSaving(true);
+    setSaveMessage("");
+
+    try {
+      const { error } = await supabase.from("qr_codes").insert({
+        user_id: user.id,
+        qr_type: qrType,
+        content: {
+          value,
+          wifiData,
+          phoneNumber,
+          emailAddress,
+          whatsappNumber,
+          vcardData,
+          eventData,
+          smsNumber,
+          smsBody,
+          locationData,
+        },
+        fg_color: fgColor,
+        bg_color: bgColor,
+        error_correction: errorCorrectionLevel,
+        logo_url: logo,
+        logo_size: logoSize,
+      });
+
+      if (error) throw error;
+      setSaveMessage("QR Code saved to your library!");
+    } catch (error) {
+      console.error("Error saving QR code:", error);
+      setSaveMessage("Failed to save QR code. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  }, [user, qrValue, qrType, value, wifiData, phoneNumber, emailAddress, whatsappNumber, vcardData, eventData, smsNumber, smsBody, locationData, fgColor, bgColor, errorCorrectionLevel, logo, logoSize]);
 
   const renderTypeFields = () => {
     switch (qrType) {
@@ -333,7 +384,16 @@ END:VEVENT`;
       <div className={`min-h-screen py-4 sm:py-8 px-3 sm:px-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-100 via-white to-purple-100'}`}>
       <div className="max-w-6xl mx-auto">
         <header className="text-center mb-6 sm:mb-10">
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-end items-center gap-2 mb-4">
+            <UserMenu />
+            {!user && (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="px-3 sm:px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium text-sm hover:from-indigo-600 hover:to-purple-600 transition-all"
+              >
+                Sign In
+              </button>
+            )}
             <button
               onClick={() => setDarkMode(!darkMode)}
               className={`p-2 sm:p-2.5 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
@@ -451,6 +511,17 @@ END:VEVENT`;
                 <span className="hidden xs:inline">Download </span>SVG
               </button>
             </div>
+            {saveMessage && (
+              <div className={`mt-3 p-2 rounded-lg text-center text-sm ${saveMessage.includes('Failed') ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'}`}>
+                {saveMessage}
+              </div>
+            )}
+            {user && (
+              <button onClick={saveQRCode} disabled={!qrValue || saving} className="mt-3 w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:shadow-none text-sm sm:text-base">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                {saving ? 'Saving...' : 'Save to Library'}
+              </button>
+            )}
           </div>
         </div>
 
@@ -472,6 +543,7 @@ END:VEVENT`;
         </footer>
       </div>
       </div>
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 }
