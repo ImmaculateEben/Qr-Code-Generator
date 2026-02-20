@@ -232,6 +232,21 @@ END:VEVENT`;
     setSaveMessage("");
 
     try {
+      // Ensure profile exists
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", user.id)
+        .single();
+
+      if (!existingProfile) {
+        // Create profile if it doesn't exist
+        await supabase.from("profiles").insert({
+          id: user.id,
+          username: user.email?.split("@")[0] || "User",
+        });
+      }
+
       if (editingQRId) {
         // Update existing QR code
         const { error } = await supabase
