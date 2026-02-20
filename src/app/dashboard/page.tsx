@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { QRCodeSVG } from "qrcode.react";
@@ -60,6 +60,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [selectedQR, setSelectedQR] = useState<QRCode | null>(null);
+  const qrRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -174,6 +175,52 @@ END:VEVENT`;
     window.location.href = "/?edit=true";
   };
 
+  const downloadPNG = (qr: QRCode) => {
+    const svg = document.querySelector(`#qr-${qr.id} svg`) as SVGSVGElement;
+    if (!svg) return;
+
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+    img.onload = () => {
+      canvas.width = 400;
+      canvas.height = 400;
+      if (ctx) {
+        ctx.fillStyle = qr.bg_color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, 400, 400);
+        const pngUrl = canvas.toDataURL("image/png");
+        const downloadLink = document.createElement("a");
+        downloadLink.href = pngUrl;
+        downloadLink.download = `${qr.title || "qrcode"}.png`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  };
+
+  const downloadSVG = (qr: QRCode) => {
+    const svg = document.querySelector(`#qr-${qr.id} svg`) as SVGSVGElement;
+    if (!svg) return;
+
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = url;
+    downloadLink.download = `${qr.title || "qrcode"}.svg`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(url);
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
@@ -250,6 +297,7 @@ END:VEVENT`;
               >
                 {/* QR Preview */}
                 <div
+                  id={`qr-${qr.id}`}
                   className="p-4 flex items-center justify-center"
                   style={{ backgroundColor: qr.bg_color }}
                 >
@@ -345,6 +393,7 @@ END:VEVENT`;
               </h2>
 
               <div
+                id={`qr-${selectedQR.id}`}
                 className="p-6 rounded-xl flex items-center justify-center mb-6"
                 style={{ backgroundColor: selectedQR.bg_color }}
               >
@@ -383,10 +432,32 @@ END:VEVENT`;
                 </p>
               </div>
 
+              {/* Export Buttons */}
+              <div className="grid grid-cols-2 gap-3 mt-6">
+                <button
+                  onClick={() => downloadPNG(selectedQR)}
+                  className="py-2.5 px-4 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-medium rounded-xl transition-all flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  PNG
+                </button>
+                <button
+                  onClick={() => downloadSVG(selectedQR)}
+                  className="py-2.5 px-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-medium rounded-xl transition-all flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  SVG
+                </button>
+              </div>
+
               <button
                 onClick={() => deleteQRCode(selectedQR.id)}
                 disabled={deleting === selectedQR.id}
-                className="mt-6 w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium transition-colors disabled:opacity-50"
+                className="mt-4 w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium transition-colors disabled:opacity-50"
               >
                 {deleting === selectedQR.id ? "Deleting..." : "Delete QR Code"}
               </button>

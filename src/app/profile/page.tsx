@@ -143,7 +143,7 @@ export default function Profile() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-:bg-gray-7003 bg-white dark border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
                 placeholder="Enter your name"
               />
             </div>
