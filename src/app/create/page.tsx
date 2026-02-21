@@ -522,10 +522,10 @@ END:VEVENT`;
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
             {/* Input Panel */}
-            <div className={`p-6 sm:p-8 rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
-              <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>QR Code Details</h3>
+            <div className={`p-4 sm:p-6 lg:p-8 rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
+              <h3 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>QR Code Details</h3>
               
               {/* QR Type Selection - Scrollable on mobile */}
               <div className="mb-6">
@@ -602,11 +602,11 @@ END:VEVENT`;
             </div>
 
             {/* Preview Panel */}
-            <div className={`p-6 sm:p-8 rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
-              <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Preview</h3>
+            <div className={`p-4 sm:p-6 lg:p-8 rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
+              <h3 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Preview</h3>
               
               <div className="flex flex-col items-center">
-                <div className={`p-8 rounded-2xl ${darkMode ? 'bg-gray-900' : 'bg-gray-100'} mb-6`}>
+                <div className={`p-3 sm:p-6 lg:p-8 rounded-xl ${darkMode ? 'bg-gray-900' : 'bg-gray-100'} mb-4 sm:mb-6`}>
                   {qrValue ? (
                     <QRCodeSVG
                       ref={qrRef}
@@ -624,16 +624,16 @@ END:VEVENT`;
                   )}
                 </div>
 
-                <div className="flex gap-3 w-full">
-                  <button onClick={downloadPNG} disabled={!qrValue} className="flex-1 py-3 px-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-semibold hover:from-indigo-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full">
+                  <button onClick={downloadPNG} disabled={!qrValue} className="flex-1 py-2.5 sm:py-3 px-3 sm:px-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-semibold text-sm hover:from-indigo-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                     Download PNG
                   </button>
-                  <button onClick={downloadSVG} disabled={!qrValue} className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
+                  <button onClick={downloadSVG} disabled={!qrValue} className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
                     Download SVG
                   </button>
                 </div>
 
-                <button onClick={saveQRCode} disabled={!qrValue || saving} className="w-full mt-3 py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                <button onClick={saveQRCode} disabled={!qrValue || saving} className="w-full mt-2 sm:mt-3 py-2.5 sm:py-3 px-3 sm:px-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold text-sm hover:from-green-600 hover:to-emerald-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                   {saving ? "Saving..." : "Save to Library"}
                 </button>
 
