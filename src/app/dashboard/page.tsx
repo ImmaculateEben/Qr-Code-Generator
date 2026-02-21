@@ -241,20 +241,29 @@ END:VEVENT`;
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div>
+          <div className="flex items-center gap-3 w-full">
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-3 py-2 sm:px-3 sm:py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[44px] min-h-[44px] justify-center"
+              title="Back to Home"
+            >
+              <svg className="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="hidden sm:inline">Back</span>
+            </Link>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
               My QR Codes
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
-              Manage your saved QR codes
-            </p>
           </div>
-          <Link
-            href="/"
-            className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-medium hover:from-indigo-600 hover:to-purple-600 transition-all"
-          >
-            + Create New QR
-          </Link>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Link
+              href="/"
+              className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-medium hover:from-indigo-600 hover:to-purple-600 transition-all"
+            >
+              + Create New QR
+            </Link>
+          </div>
         </div>
 
         {/* QR Codes Grid */}
