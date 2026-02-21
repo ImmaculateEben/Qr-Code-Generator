@@ -473,19 +473,19 @@ END:VEVENT`;
     <div className={darkMode ? 'dark' : ''}>
       <div className={`min-h-screen py-4 sm:py-8 px-2 sm:px-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-100 via-white to-purple-100'}`}>
         <div className="max-w-6xl mx-auto overflow-hidden">
-          <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-10">
+          <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 sm:mb-10">
             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
               <a href="/" className="flex items-center gap-2 flex-shrink-0">
-                <div className="w-8 sm:w-10 h-8 sm:h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
-                  <svg className="w-4 h-4 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                   </svg>
                 </div>
-                <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white hidden sm:inline">QRCode Pro</span>
+                <span className="text-lg font-bold text-gray-900 dark:text-white hidden sm:inline">QRCode Pro</span>
               </a>
-              <span className={`text-sm sm:text-lg ${darkMode ? 'text-gray-400' : 'text-gray-500'} truncate`}>/ Create QR</span>
+              <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>/ Create</span>
             </div>
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end flex-wrap">
               <UserMenu />
               {!user && (
                 <button
