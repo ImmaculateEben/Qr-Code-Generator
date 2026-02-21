@@ -41,13 +41,15 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           onClose();
           setEmail("");
           setPassword("");
+          // Redirect to create page after successful login
+          window.location.href = '/create';
         }
       } else {
         const { error } = await signUp(email, password);
         if (error) {
           setError(error.message);
         } else {
-          setSuccessMessage("Check your email to confirm your account!");
+          setSuccessMessage("Check your email to confirm your account! Then you can start creating QR codes.");
           setIsLogin(true);
         }
       }

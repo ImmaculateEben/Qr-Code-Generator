@@ -473,19 +473,19 @@ END:VEVENT`;
     <div className={darkMode ? 'dark' : ''}>
       <div className={`min-h-screen py-4 sm:py-8 px-3 sm:px-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-100 via-white to-purple-100'}`}>
         <div className="max-w-6xl mx-auto">
-          <header className="flex items-center justify-between mb-6 sm:mb-10">
-            <div className="flex items-center gap-4">
-              <a href="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-10">
+            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              <a href="/" className="flex items-center gap-2 flex-shrink-0">
+                <div className="w-8 sm:w-10 h-8 sm:h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                  <svg className="w-4 h-4 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                   </svg>
                 </div>
-                <span className="text-xl font-bold text-gray-900 dark:text-white">QRCode Pro</span>
+                <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white hidden sm:inline">QRCode Pro</span>
               </a>
-              <span className={`text-lg ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>/ Create QR</span>
+              <span className={`text-sm sm:text-lg ${darkMode ? 'text-gray-400' : 'text-gray-500'} truncate`}>/ Create QR</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
               <UserMenu />
               {!user && (
                 <button
@@ -513,12 +513,12 @@ END:VEVENT`;
             </div>
           </header>
 
-          <div className="text-center mb-8">
-            <h1 className={`text-2xl sm:text-3xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
               Create Your QR Code
             </h1>
-            <p className={`text-lg ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Fill in the details below and watch your QR code appear in real-time
+            <p className={`text-sm sm:text-base ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Fill in the details below
             </p>
           </div>
 
@@ -527,12 +527,16 @@ END:VEVENT`;
             <div className={`p-6 sm:p-8 rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
               <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>QR Code Details</h3>
               
-              {/* QR Type Selection */}
+              {/* QR Type Selection - Scrollable on mobile */}
               <div className="mb-6">
                 <label className={labelClass}>QR Code Type</label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <div className="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide">
                   {qrTypes.map((type) => (
-                    <button key={type.id} onClick={() => setQrType(type.id)} className={`py-2 px-3 rounded-lg text-sm font-medium transition-all ${qrType === type.id ? 'bg-indigo-600 text-white' : darkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+                    <button 
+                      key={type.id} 
+                      onClick={() => setQrType(type.id)} 
+                      className={`flex-shrink-0 py-2 px-3 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${qrType === type.id ? 'bg-indigo-600 text-white' : darkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
                       <span className="mr-1">{type.icon}</span> {type.label}
                     </button>
                   ))}
@@ -542,20 +546,20 @@ END:VEVENT`;
               {/* Dynamic Input Fields */}
               <div className="mb-6">{renderTypeFields()}</div>
 
-              {/* Color Options */}
-              <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              {/* Color Options - Stack on mobile */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <div>
-                  <label className={labelClass}>Foreground Color</label>
-                  <div className="flex items-center gap-3">
-                    <input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="w-12 h-12 rounded-lg cursor-pointer border-0" />
-                    <input type="text" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className={`flex-1 px-3 py-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`} />
+                  <label className={labelClass}>Foreground</label>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg cursor-pointer border-0 flex-shrink-0" />
+                    <input type="text" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className={`flex-1 px-2 sm:px-3 py-2 rounded-lg border text-sm ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`} />
                   </div>
                 </div>
                 <div>
-                  <label className={labelClass}>Background Color</label>
-                  <div className="flex items-center gap-3">
-                    <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-12 h-12 rounded-lg cursor-pointer border-0" />
-                    <input type="text" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className={`flex-1 px-3 py-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`} />
+                  <label className={labelClass}>Background</label>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg cursor-pointer border-0 flex-shrink-0" />
+                    <input type="text" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className={`flex-1 px-2 sm:px-3 py-2 rounded-lg border text-sm ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`} />
                   </div>
                 </div>
               </div>
