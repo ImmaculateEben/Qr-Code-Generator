@@ -611,14 +611,14 @@ END:VEVENT`;
                     <QRCodeSVG
                       ref={qrRef}
                       value={qrValue}
-                      size={280}
+                      size={180}
                       fgColor={fgColor}
                       bgColor={bgColor}
                       level={errorCorrectionLevel}
-                      imageSettings={logo ? { src: logo, height: logoSize * 10, width: logoSize * 10, excavate: true } : undefined}
+                      imageSettings={logo ? { src: logo, height: logoSize * 5, width: logoSize * 5, excavate: true } : undefined}
                     />
                   ) : (
-                    <div className={`w-[280px] h-[280px] flex items-center justify-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                    <div className={`w-[180px] h-[180px] flex items-center justify-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                       Enter content to generate QR code
                     </div>
                   )}
