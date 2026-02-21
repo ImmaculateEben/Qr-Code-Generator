@@ -471,8 +471,8 @@ END:VEVENT`;
 
   return (
     <div className={darkMode ? 'dark' : ''}>
-      <div className={`min-h-screen py-4 sm:py-8 px-3 sm:px-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-100 via-white to-purple-100'}`}>
-        <div className="max-w-6xl mx-auto">
+      <div className={`min-h-screen py-4 sm:py-8 px-2 sm:px-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-100 via-white to-purple-100'}`}>
+        <div className="max-w-6xl mx-auto overflow-hidden">
           <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-10">
             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
               <a href="/" className="flex items-center gap-2 flex-shrink-0">
@@ -522,9 +522,9 @@ END:VEVENT`;
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
             {/* Input Panel */}
-            <div className={`p-4 sm:p-6 lg:p-8 rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
+            <div className={`p-3 sm:p-6 lg:p-8 rounded-2xl w-full ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
               <h3 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>QR Code Details</h3>
               
               {/* QR Type Selection - Scrollable on mobile */}
@@ -602,7 +602,7 @@ END:VEVENT`;
             </div>
 
             {/* Preview Panel */}
-            <div className={`p-4 sm:p-6 lg:p-8 rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
+            <div className={`p-3 sm:p-6 lg:p-8 rounded-2xl w-full ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
               <h3 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Preview</h3>
               
               <div className="flex flex-col items-center">
