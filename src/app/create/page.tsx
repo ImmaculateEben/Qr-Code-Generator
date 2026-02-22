@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { useAuth } from "@/context/AuthContext";
+import { useDarkMode } from "@/context/DarkModeContext";
 import { supabase } from "@/lib/supabase";
 import AuthModal from "@/components/AuthModal";
 import UserMenu from "@/components/UserMenu";
@@ -57,6 +58,7 @@ const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 m
 
 export default function CreateQRPage() {
   const { user } = useAuth();
+  const { darkMode, toggleDarkMode } = useDarkMode();
   const [qrType, setQrType] = useState<QRType>("url");
   const [value, setValue] = useState("");
   const [fgColor, setFgColor] = useState("#1e293b");
@@ -64,7 +66,6 @@ export default function CreateQRPage() {
   const [errorCorrectionLevel, setErrorCorrectionLevel] = useState<ErrorCorrectionLevel>("M");
   const [logo, setLogo] = useState<string | null>(null);
   const [logoSize, setLogoSize] = useState(20);
-  const [darkMode, setDarkMode] = useState(false);
   const qrRef = useRef<SVGSVGElement>(null);
 
   const [wifiData, setWifiData] = useState<WiFiData>({ ssid: "", password: "", encryption: "WPA" });
@@ -496,7 +497,7 @@ END:VEVENT`;
                 </button>
               )}
               <button
-                onClick={() => setDarkMode(!darkMode)}
+                onClick={() => toggleDarkMode()}
                 className={`p-2 sm:p-2.5 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                 aria-label="Toggle dark mode"
               >
@@ -647,6 +648,15 @@ END:VEVENT`;
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className={`py-8 mt-8 ${darkMode ? 'bg-gray-900 border-t border-gray-800' : 'bg-white border-t border-gray-200'}`}>
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+            © {new Date().getFullYear()} QRCode Pro. All rights reserved.
+          </p>
+        </div>
+      </footer>
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
