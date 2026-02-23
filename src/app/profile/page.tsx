@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 interface Profile {
   id: string;
@@ -20,6 +21,7 @@ export default function Profile() {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
   const [deleting, setDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     if (!initialized) return;
@@ -65,6 +67,27 @@ export default function Profile() {
       console.error("Error fetching profile:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteAccount = async () => {
+    if (!user) return;
+    
+    setDeleting(true);
+    setShowDeleteModal(false);
+    try {
+      // Delete all QR codes first
+      await supabase.from("qr_codes").delete().eq("user_id", user.id);
+      // Delete profile
+      await supabase.from("profiles").delete().eq("id", user.id);
+      // Sign out
+      await supabase.auth.signOut();
+      // Redirect to home
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Failed to delete account. Please try again.");
+      setDeleting(false);
     }
   };
 
@@ -241,26 +264,7 @@ export default function Profile() {
             All your QR codes will be permanently deleted.
           </p>
           <button
-            onClick={async () => {
-              if (!confirm("Are you sure you want to delete your account? This cannot be undone.")) return;
-              if (!confirm("This will permanently delete all your QR codes. Are you absolutely sure?")) return;
-              
-              setDeleting(true);
-              try {
-                // Delete all QR codes first
-                await supabase.from("qr_codes").delete().eq("user_id", user.id);
-                // Delete profile
-                await supabase.from("profiles").delete().eq("id", user.id);
-                // Sign out
-                await supabase.auth.signOut();
-                // Redirect to home
-                window.location.href = "/";
-              } catch (error) {
-                console.error("Error deleting account:", error);
-                alert("Failed to delete account. Please try again.");
-                setDeleting(false);
-              }
-            }}
+            onClick={() => setShowDeleteModal(true)}
             disabled={deleting}
             className="w-full py-3 px-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all disabled:opacity-50"
           >
@@ -268,6 +272,18 @@ export default function Profile() {
           </button>
         </div>
       </div>
+
+      {/* Delete Account Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        title="Delete Account"
+        message="Are you sure you want to delete your account? This action cannot be undone. All your QR codes will be permanently deleted."
+        confirmText="Delete Account"
+        cancelText="Cancel"
+        onConfirm={deleteAccount}
+        onCancel={() => setShowDeleteModal(false)}
+        danger
+      />
     </div>
   );
 }

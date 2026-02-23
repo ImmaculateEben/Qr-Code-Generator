@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { QRCodeSVG } from "qrcode.react";
 import Link from "next/link";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 interface QRContent {
   value?: string;
@@ -60,6 +61,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [selectedQR, setSelectedQR] = useState<QRCode | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [qrToDelete, setQrToDelete] = useState<string | null>(null);
   const qrRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -95,20 +98,27 @@ export default function Dashboard() {
     }
   };
 
-  const deleteQRCode = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this QR code?")) return;
+  const confirmDeleteQR = (id: string) => {
+    setQrToDelete(id);
+    setShowDeleteModal(true);
+  };
 
-    setDeleting(id);
+  const deleteQRCode = async () => {
+    if (!qrToDelete) return;
+    
+    setDeleting(qrToDelete);
+    setShowDeleteModal(false);
     try {
-      const { error } = await supabase.from("qr_codes").delete().eq("id", id);
+      const { error } = await supabase.from("qr_codes").delete().eq("id", qrToDelete);
       if (error) throw error;
-      setQrCodes(qrCodes.filter((qr) => qr.id !== id));
+      setQrCodes(qrCodes.filter((qr) => qr.id !== qrToDelete));
       setSelectedQR(null);
     } catch (error) {
       console.error("Error deleting QR code:", error);
       alert("Failed to delete QR code");
     } finally {
       setDeleting(null);
+      setQrToDelete(null);
     }
   };
 
@@ -260,7 +270,7 @@ END:VEVENT`;
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
             <Link
-              href="/"
+              href="/create"
               className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-medium hover:from-indigo-600 hover:to-purple-600 transition-all"
             >
               + Create New QR
@@ -293,7 +303,7 @@ END:VEVENT`;
               Create your first QR code and save it to your library!
             </p>
             <Link
-              href="/"
+              href="/create"
               className="inline-block px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-medium hover:from-indigo-600 hover:to-purple-600 transition-all"
             >
               Create QR Code
@@ -359,7 +369,7 @@ END:VEVENT`;
                       View
                     </button>
                     <button
-                      onClick={() => deleteQRCode(qr.id)}
+                      onClick={() => confirmDeleteQR(qr.id)}
                       disabled={deleting === qr.id}
                       className="px-3 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors disabled:opacity-50"
                     >
@@ -466,7 +476,7 @@ END:VEVENT`;
               </div>
 
               <button
-                onClick={() => deleteQRCode(selectedQR.id)}
+                onClick={() => confirmDeleteQR(selectedQR.id)}
                 disabled={deleting === selectedQR.id}
                 className="mt-4 w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium transition-colors disabled:opacity-50"
               >
@@ -476,6 +486,21 @@ END:VEVENT`;
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        title="Delete QR Code"
+        message="Are you sure you want to delete this QR code? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={deleteQRCode}
+        onCancel={() => {
+          setShowDeleteModal(false);
+          setQrToDelete(null);
+        }}
+        danger
+      />
     </div>
   );
 }
