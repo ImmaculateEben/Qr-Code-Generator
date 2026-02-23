@@ -487,7 +487,6 @@ END:VEVENT`;
                 </div>
                 <span className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>QRCode Pro</span>
               </a>
-              <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>/ Create</span>
             </div>
             
             {/* Desktop Right Side */}
