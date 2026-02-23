@@ -25,6 +25,7 @@ export default function Home() {
   const { user } = useAuth();
   const { darkMode, toggleDarkMode } = useDarkMode();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -62,16 +63,79 @@ export default function Home() {
               <button onClick={() => scrollToSection("how-it-works")} className={`text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>How It Works</button>
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* Desktop Right Side */}
+            <div className="hidden md:flex items-center gap-3">
               <button onClick={() => toggleDarkMode()} className={`p-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
+                {darkMode ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+              </button>
               <UserMenu />
               {!user && (
-                <button onClick={() => setShowAuthModal(true)} className="px-3 sm:px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium text-sm hover:from-indigo-600 hover:to-purple-600 transition-all">
+                <button onClick={() => setShowAuthModal(true)} className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium text-sm hover:from-indigo-600 hover:to-purple-600 transition-all">
                   Sign In
                 </button>
               )}
             </div>
+
+            {/* Mobile Menu Button */}
+            <div className="flex md:hidden items-center gap-2">
+              <button onClick={() => toggleDarkMode()} className={`p-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
+                {darkMode ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+              </button>
+              <UserMenu />
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+                className={`p-2 rounded-lg ${darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <div className={`md:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} py-4`}>
+              <div className="flex flex-col gap-4">
+                <button onClick={() => { scrollToSection("home"); setMobileMenuOpen(false); }} className={`text-left px-4 py-2 text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Home
+                </button>
+                <button onClick={() => { scrollToSection("features"); setMobileMenuOpen(false); }} className={`text-left px-4 py-2 text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Features
+                </button>
+                <button onClick={() => { scrollToSection("how-it-works"); setMobileMenuOpen(false); }} className={`text-left px-4 py-2 text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  How It Works
+                </button>
+                {!user && (
+                  <button onClick={() => { setShowAuthModal(true); setMobileMenuOpen(false); }} className="mx-4 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium text-sm text-center">
+                    Sign In
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
