@@ -172,7 +172,7 @@ END:VEVENT`;
   const editQRCode = (qr: QRCode) => {
     // Store the QR data in localStorage for the generator to load
     localStorage.setItem("editQR", JSON.stringify(qr));
-    window.location.href = "/?edit=true";
+    window.location.href = "/create?edit=true";
   };
 
   const downloadPNG = (qr: QRCode) => {
