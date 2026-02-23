@@ -81,6 +81,7 @@ export default function CreateQRPage() {
   const [saving, setSaving] = useState(false);
   const [editingQRId, setEditingQRId] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Load QR data from localStorage for editing and handle QR type from URL
   useEffect(() => {
@@ -472,35 +473,26 @@ END:VEVENT`;
 
   return (
     <div className={darkMode ? 'dark' : ''}>
-      <div className={`min-h-screen py-4 sm:py-8 px-2 sm:px-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-100 via-white to-purple-100'}`}>
-        <div className="max-w-6xl mx-auto overflow-hidden">
-          <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 sm:mb-10">
-            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-              <a href="/" className="flex items-center gap-2 flex-shrink-0">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      {/* Navigation */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 ${darkMode ? 'bg-gray-900/95' : 'bg-white/95'} backdrop-blur-sm border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <a href="/" className="flex items-center gap-2">
+                <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                   </svg>
                 </div>
-                <span className="text-lg font-bold text-gray-900 dark:text-white hidden sm:inline">QRCode Pro</span>
+                <span className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>QRCode Pro</span>
               </a>
               <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>/ Create</span>
             </div>
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end flex-wrap">
-              <UserMenu />
-              {!user && (
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="px-3 sm:px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium text-sm hover:from-indigo-600 hover:to-purple-600 transition-all"
-                >
-                  Sign In
-                </button>
-              )}
-              <button
-                onClick={() => toggleDarkMode()}
-                className={`p-2 sm:p-2.5 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-                aria-label="Toggle dark mode"
-              >
+            
+            {/* Desktop Right Side */}
+            <div className="hidden md:flex items-center gap-3">
+              <button onClick={() => toggleDarkMode()} className={`p-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
                 {darkMode ? (
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -511,9 +503,68 @@ END:VEVENT`;
                   </svg>
                 )}
               </button>
+              <UserMenu />
+              {!user && (
+                <button onClick={() => setShowAuthModal(true)} className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium text-sm hover:from-indigo-600 hover:to-purple-600 transition-all">
+                  Sign In
+                </button>
+              )}
             </div>
-          </header>
 
+            {/* Mobile Menu Button */}
+            <div className="flex md:hidden items-center gap-2">
+              <button onClick={() => toggleDarkMode()} className={`p-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
+                {darkMode ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+              </button>
+              <UserMenu />
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+                className={`p-2 rounded-lg ${darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <div className={`md:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} py-4`}>
+              <div className="flex flex-col gap-4">
+                <a href="/" className={`text-left px-4 py-2 text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Home
+                </a>
+                <a href="/#features" className={`text-left px-4 py-2 text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Features
+                </a>
+                {!user && (
+                  <button onClick={() => { setShowAuthModal(true); setMobileMenuOpen(false); }} className="mx-4 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium text-sm text-center">
+                    Sign In
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      <div className={`pt-20 min-h-screen py-4 sm:py-8 px-2 sm:px-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-100 via-white to-purple-100'}`}>
+        <div className="max-w-6xl mx-auto overflow-hidden">
           <div className="text-center mb-6 sm:mb-8">
             <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
               Create Your QR Code
