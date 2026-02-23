@@ -13,7 +13,7 @@ interface Profile {
 }
 
 export default function Profile() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, initialized } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -22,7 +22,9 @@ export default function Profile() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!initialized) return;
+    
+    if (!user) {
       window.location.href = "/";
       return;
     }
@@ -30,7 +32,7 @@ export default function Profile() {
     if (user) {
       fetchProfile();
     }
-  }, [user, authLoading]);
+  }, [user, initialized]);
 
   const fetchProfile = async () => {
     if (!user) return;
@@ -220,7 +222,7 @@ export default function Profile() {
             <div className="text-xs text-gray-500 dark:text-gray-400">View library</div>
           </Link>
           <Link
-            href="/"
+            href="/create"
             className="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-4 hover:shadow-md transition-shadow text-center"
           >
             <div className="text-2xl mb-2">➕</div>

@@ -55,7 +55,7 @@ interface QRCode {
 }
 
 export default function Dashboard() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, initialized } = useAuth();
   const [qrCodes, setQrCodes] = useState<QRCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -63,7 +63,9 @@ export default function Dashboard() {
   const qrRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!initialized) return;
+    
+    if (!user) {
       // Redirect to home if not logged in
       window.location.href = "/";
       return;
@@ -72,7 +74,7 @@ export default function Dashboard() {
     if (user) {
       fetchQRCodes();
     }
-  }, [user, authLoading]);
+  }, [user, initialized]);
 
   const fetchQRCodes = async () => {
     if (!user) return;
