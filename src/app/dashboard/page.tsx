@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useDarkMode } from "@/context/DarkModeContext";
 import { supabase } from "@/lib/supabase";
 import { QRCodeSVG } from "qrcode.react";
 import Link from "next/link";
@@ -57,6 +58,7 @@ interface QRCode {
 
 export default function Dashboard() {
   const { user, loading: authLoading, initialized } = useAuth();
+  const { darkMode } = useDarkMode();
   const [qrCodes, setQrCodes] = useState<QRCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -235,10 +237,12 @@ END:VEVENT`;
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading your QR codes...</p>
+      <div className={darkMode ? 'dark' : ''}>
+        <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">Loading your QR codes...</p>
+          </div>
         </div>
       </div>
     );
@@ -249,6 +253,7 @@ END:VEVENT`;
   }
 
   return (
+    <div className={darkMode ? 'dark' : ''}>
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {/* Header */}
@@ -501,6 +506,7 @@ END:VEVENT`;
         }}
         danger
       />
+    </div>
     </div>
   );
 }

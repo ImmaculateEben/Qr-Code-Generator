@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useDarkMode } from "@/context/DarkModeContext";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import ConfirmationModal from "@/components/ConfirmationModal";
@@ -15,6 +16,7 @@ interface Profile {
 
 export default function Profile() {
   const { user, loading: authLoading, initialized } = useAuth();
+  const { darkMode } = useDarkMode();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -116,10 +118,12 @@ export default function Profile() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading profile...</p>
+      <div className={darkMode ? 'dark' : ''}>
+        <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">Loading profile...</p>
+          </div>
         </div>
       </div>
     );
@@ -130,6 +134,7 @@ export default function Profile() {
   }
 
   return (
+    <div className={darkMode ? 'dark' : ''}>
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {/* Header */}
@@ -284,6 +289,7 @@ export default function Profile() {
         onCancel={() => setShowDeleteModal(false)}
         danger
       />
+    </div>
     </div>
   );
 }
