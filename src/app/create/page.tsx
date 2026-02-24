@@ -60,6 +60,7 @@ export default function CreateQRPage() {
   const { user } = useAuth();
   const { darkMode, toggleDarkMode } = useDarkMode();
   const [qrType, setQrType] = useState<QRType>("url");
+  const [title, setTitle] = useState("");
   const [value, setValue] = useState("");
   const [fgColor, setFgColor] = useState("#1e293b");
   const [bgColor, setBgColor] = useState("#ffffff");
@@ -98,6 +99,7 @@ export default function CreateQRPage() {
         try {
           const qr = JSON.parse(editData);
           setQrType(qr.qr_type);
+          setTitle(qr.title || "");
           setFgColor(qr.fg_color || "#1e293b");
           setBgColor(qr.bg_color || "#ffffff");
           setErrorCorrectionLevel(qr.error_correction || "M");
@@ -254,6 +256,7 @@ END:VEVENT`;
         const { error } = await supabase
           .from("qr_codes")
           .update({
+            title: title || null,
             qr_type: qrType,
             content: {
               value,
@@ -281,6 +284,7 @@ END:VEVENT`;
         setEditingQRId(null);
       } else {
         const { error } = await supabase.from("qr_codes").insert({
+          title: title || null,
           user_id: user.id,
           qr_type: qrType,
           content: {
@@ -312,7 +316,7 @@ END:VEVENT`;
     } finally {
       setSaving(false);
     }
-  }, [user, qrValue, qrType, value, wifiData, phoneNumber, emailAddress, whatsappNumber, vcardData, eventData, smsNumber, smsBody, locationData, fgColor, bgColor, errorCorrectionLevel, logo, logoSize, editingQRId]);
+  }, [user, qrValue, qrType, title, value, wifiData, phoneNumber, emailAddress, whatsappNumber, vcardData, eventData, smsNumber, smsBody, locationData, fgColor, bgColor, errorCorrectionLevel, logo, logoSize, editingQRId]);
 
   const renderTypeFields = () => {
     switch (qrType) {
@@ -578,6 +582,18 @@ END:VEVENT`;
             <div className={`p-3 sm:p-6 lg:p-8 rounded-2xl w-full ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
               <h3 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>QR Code Details</h3>
               
+              {/* QR Code Name */}
+              <div className="mb-6">
+                <label className={labelClass}>QR Code Name (Optional)</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Enter a name for this QR code"
+                  className={inputClass}
+                />
+              </div>
+
               {/* QR Type Selection - Scrollable on mobile */}
               <div className="mb-6">
                 <label className={labelClass}>QR Code Type</label>
