@@ -2,10 +2,14 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useDarkMode } from "@/context/DarkModeContext";
+import ConfirmationModal from "./ConfirmationModal";
 
 export default function UserMenu() {
   const { user, signOut } = useAuth();
+  const { darkMode } = useDarkMode();
   const [isOpen, setIsOpen] = useState(false);
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,6 +25,7 @@ export default function UserMenu() {
   if (!user) return null;
 
   const handleSignOut = async () => {
+    setShowSignOutModal(false);
     await signOut();
     setIsOpen(false);
   };
@@ -75,7 +80,7 @@ export default function UserMenu() {
             Profile
           </a>
           <button
-            onClick={handleSignOut}
+            onClick={() => setShowSignOutModal(true)}
             className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,6 +90,17 @@ export default function UserMenu() {
           </button>
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={showSignOutModal}
+        title="Sign Out"
+        message="Are you sure you want to sign out?"
+        confirmText="Sign Out"
+        cancelText="Cancel"
+        onConfirm={handleSignOut}
+        onCancel={() => setShowSignOutModal(false)}
+        danger
+      />
     </div>
   );
 }
